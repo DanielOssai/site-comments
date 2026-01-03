@@ -3,50 +3,36 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Comments</title>
 </head>
+
 <body style="margin:0;background:transparent;">
   <div style="max-width:760px;margin:20px auto;padding:0 12px;font-family:Arial,sans-serif;">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+    
+    <div style="display:flex;justify-content:space-between;align-items:center;">
       <h3 style="margin:0;">Comments</h3>
-      <div style="font-size:13px;opacity:.8;">Total: <span id="total">0</span></div>
+      <div style="font-size:13px;opacity:.7;">Total: <span id="total">0</span></div>
     </div>
 
-    <div id="msg" style="margin:10px 0 12px 0;font-size:13px;"></div>
+    <div id="msg" style="margin:10px 0;font-size:13px;"></div>
 
-    <div id="adminBar" style="display:none;margin:0 0 12px 0;padding:10px 12px;border:1px solid #e6e6e6;border-radius:12px;background:#fff;">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-        <div style="font-size:13px;">Admin mode on</div>
-        <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
-          <input id="asAuthor" type="checkbox" />
-          Post as Author
-        </label>
-      </div>
-    </div>
-
-    <div style="border:1px solid #ddd;border-radius:12px;background:#fff;padding:12px;">
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <div style="width:34px;height:34px;border-radius:999px;display:grid;place-items:center;background:#f2f2f2;border:1px solid #e6e6e6;">👤</div>
-        <input id="name" maxlength="20" placeholder="Anonymous"
-          style="padding:8px 10px;border:1px solid #ddd;border-radius:10px;font-size:14px;min-width:220px;" />
+    <div style="border:1px solid #ddd;border-radius:12px;padding:12px;background:#fff;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#eee;">👤</div>
+        <input id="name" placeholder="Anonymous" maxlength="20"
+          style="flex:1;padding:8px;border:1px solid #ddd;border-radius:8px;">
       </div>
 
-      <textarea id="text" maxlength="100" placeholder="Write a comment (max 100 chars)"
-        style="margin-top:10px;width:100%;height:90px;padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:14px;box-sizing:border-box;"></textarea>
+      <textarea id="text" maxlength="100"
+        placeholder="Write a comment (max 100 characters)"
+        style="width:100%;height:90px;margin-top:10px;padding:10px;border:1px solid #ddd;border-radius:10px;"></textarea>
 
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap;">
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button id="emojiBtn" type="button" style="padding:8px 10px;border:1px solid #ddd;border-radius:10px;background:#fff;cursor:pointer;">😀 Emojis</button>
-          <div id="emojiPanel" style="display:none;position:relative;">
-            <div style="position:absolute;z-index:9999;top:6px;left:0;width:320px;max-width:80vw;background:#fff;border:1px solid #ddd;border-radius:12px;padding:10px;box-shadow:0 8px 30px rgba(0,0,0,.08);">
-              <div id="grid" style="display:grid;grid-template-columns:repeat(8,1fr);gap:6px;max-height:220px;overflow:auto;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div id="count" style="font-size:12px;opacity:.75;">0 / 100</div>
-          <button id="post" type="button" style="padding:9px 14px;border:none;border-radius:10px;background:#111;color:#fff;cursor:pointer;">Post</button>
-        </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+        <div id="count" style="font-size:12px;opacity:.7;">0 / 100</div>
+        <button id="post"
+          style="padding:8px 14px;border:none;border-radius:10px;background:#111;color:#fff;cursor:pointer;">
+          Post
+        </button>
       </div>
     </div>
 
@@ -54,268 +40,112 @@
   </div>
 
 <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbx9QhQWo6rJBHMmdZ8D2yDA5395N5-LZlXm4JxuozBZV8K1koyOKoGgwkZ_x-tgeyB_/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbx9QhQWo6rJBHMmdZ8D2yDA5395N5-LZlXm4JxuozBZV8K1koyOKoGgwkZ_x-tgeyB_/exec";
 
-  const params = new URLSearchParams(location.search);
-  const postId = (params.get("post") || "").trim() || (document.referrer || "").trim() || "default_post";
-  const adminKey = (params.get("admin") || "").trim();
+const params = new URLSearchParams(location.search);
+const postId = params.get("post") || document.referrer || "default";
 
-  const nameEl = document.getElementById("name");
-  const textEl = document.getElementById("text");
-  const msgEl = document.getElementById("msg");
-  const listEl = document.getElementById("list");
-  const totalEl = document.getElementById("total");
-  const countEl = document.getElementById("count");
-  const postBtn = document.getElementById("post");
+const nameEl = document.getElementById("name");
+const textEl = document.getElementById("text");
+const postBtn = document.getElementById("post");
+const listEl = document.getElementById("list");
+const msgEl = document.getElementById("msg");
+const totalEl = document.getElementById("total");
+const countEl = document.getElementById("count");
 
-  const adminBar = document.getElementById("adminBar");
-  const asAuthor = document.getElementById("asAuthor");
+function deviceId() {
+  let id = localStorage.getItem("comment_device_id");
+  if (!id) {
+    id = "d_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+    localStorage.setItem("comment_device_id", id);
+  }
+  return id;
+}
 
-  const emojiBtn = document.getElementById("emojiBtn");
-  const emojiPanel = document.getElementById("emojiPanel");
-  const grid = document.getElementById("grid");
+function escapeHtml(s) {
+  return String(s)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;");
+}
 
-  const EMOJIS = ["😀","😃","😄","😁","😆","😂","🤣","😊","🙂","😉","😍","🥰","😘","😮","😳","🥺","😭","😤","😡","🤯","🤔","🙏","💯","🔥","✨","❤️","💀","👀","👍","👎","👏","🤝","🫶","🎉","✅","❌","⚠️","🕊️","📌","🎯","📝","🎬","🏀"];
+function formatTime(iso) {
+  const d = new Date(iso);
+  return d.toLocaleString();
+}
 
-  function deviceId() {
-    let id = localStorage.getItem("comment_device_id_v1");
-    if (!id) {
-      id = "d_" + Date.now() + "_" + Math.random().toString(16).slice(2);
-      localStorage.setItem("comment_device_id_v1", id);
-    }
-    return id;
+async function load() {
+  const res = await fetch(API_URL + "?action=list&postId=" + encodeURIComponent(postId));
+  const data = await res.json();
+
+  if (!data.ok) {
+    msgEl.textContent = data.error || "Error loading comments";
+    return;
   }
 
-  function setMsg(t, bad) {
-    msgEl.textContent = t || "";
-    msgEl.style.padding = t ? "10px 12px" : "0";
-    msgEl.style.border = t ? "1px solid #e6e6e6" : "none";
-    msgEl.style.borderRadius = "10px";
-    msgEl.style.background = bad ? "#fff3f3" : "#f7f7f7";
-    msgEl.style.color = bad ? "#7a1c1c" : "#333";
+  listEl.innerHTML = "";
+  totalEl.textContent = data.totalVisible || 0;
+
+  if (!data.comments.length) {
+    listEl.innerHTML = "<div style='opacity:.6;padding:10px;'>No comments yet.</div>";
+    return;
   }
 
-  function escapeHtml(s) {
-    return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
-  }
+  data.comments.forEach(c => {
+    const div = document.createElement("div");
+    div.style.border = "1px solid #ddd";
+    div.style.borderRadius = "10px";
+    div.style.padding = "10px";
+    div.style.marginTop = "10px";
+    div.innerHTML = `
+      <div style="font-size:13px;">
+        <b>${escapeHtml(c.name || "Anonymous")}</b>
+        ${c.role === "author" ? "<span style='margin-left:6px;font-size:11px;'>Author</span>" : ""}
+      </div>
+      <div style="font-size:12px;opacity:.6;">${formatTime(c.createdAtISO)}</div>
+      <div style="margin-top:6px;">${escapeHtml(c.text)}</div>
+    `;
+    listEl.appendChild(div);
+  });
+}
 
-  function format(iso) {
-    const d = new Date(iso);
-    const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    const dd = days[d.getDay()];
-    const day = d.getDate();
-    const mon = months[d.getMonth()];
-    const yr = d.getFullYear();
-    const hh = String(d.getHours()).padStart(2,"0");
-    const mm = String(d.getMinutes()).padStart(2,"0");
-    return dd + " " + day + " " + mon + " " + yr + ", " + hh + ":" + mm;
-  }
+postBtn.onclick = async () => {
+  const name = nameEl.value.trim() || "Anonymous";
+  const text = textEl.value.trim();
+  if (!text) return;
 
-  async function load() {
-    const url = API_URL + "?action=list&postId=" + encodeURIComponent(postId) +
-      (adminKey ? "&adminKey=" + encodeURIComponent(adminKey) : "");
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (!data.ok) { setMsg(data.error || "Error", true); return; }
-
-    totalEl.textContent = String(data.totalVisible || 0);
-    if (data.isAdmin) adminBar.style.display = "block";
-
-    listEl.innerHTML = "";
-
-    if (!data.comments.length) {
-      const div = document.createElement("div");
-      div.style.opacity = ".75";
-      div.style.padding = "12px 4px";
-      div.textContent = "No comments yet.";
-      listEl.appendChild(div);
-      return;
-    }
-
-    data.comments.forEach(c => {
-      const isAuthor = (c.role || "") === "author";
-      const isPending = (c.status || "") === "pending";
-
-      const badge = isAuthor
-        ? '<span style="margin-left:8px;font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid #ddd;background:#f7f7f7;">Author</span>'
-        : "";
-
-      const pendingTag = isPending
-        ? '<span style="margin-left:8px;font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid #f0c2c2;background:#fff3f3;color:#7a1c1c;">Pending</span>'
-        : "";
-
-      const adminButtons = adminKey
-        ? `
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-            ${isPending ? `<button data-act="approve" data-id="${c.commentId}" style="border:1px solid #ddd;background:#fff;border-radius:10px;padding:6px 10px;cursor:pointer;">Approve</button>` : ""}
-            <button data-act="delete" data-id="${c.commentId}" style="border:1px solid #ddd;background:#fff;border-radius:10px;padding:6px 10px;cursor:pointer;">Delete</button>
-          </div>
-        `
-        : "";
-
-      const card = document.createElement("div");
-      card.style.border = "1px solid #e6e6e6";
-      card.style.borderRadius = "12px";
-      card.style.padding = "12px";
-      card.style.marginTop = "10px";
-      card.style.background = "#fff";
-
-      card.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:34px;height:34px;border-radius:999px;display:grid;place-items:center;background:#f2f2f2;border:1px solid #e6e6e6;">👤</div>
-            <div>
-              <div style="font-size:13px;">
-                <b>${escapeHtml(c.name || "Anonymous")}</b>
-                ${badge}
-                ${pendingTag}
-              </div>
-              <div style="font-size:12px;opacity:.7;">${format(c.createdAtISO)}</div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-            <div style="display:flex;gap:8px;align-items:center;">
-              <button data-act="like" data-id="${c.commentId}" style="border:1px solid #ddd;background:#fff;border-radius:999px;padding:6px 10px;cursor:pointer;">👍 ${c.likes || 0}</button>
-              <button data-act="dislike" data-id="${c.commentId}" style="border:1px solid #ddd;background:#fff;border-radius:999px;padding:6px 10px;cursor:pointer;">👎 ${c.dislikes || 0}</button>
-            </div>
-            ${adminButtons}
-          </div>
-        </div>
-
-        <div style="margin-top:10px;white-space:pre-wrap;word-break:break-word;">${escapeHtml(c.text || "")}</div>
-      `;
-
-      listEl.appendChild(card);
-    });
-  }
-
-  async function apiPost(payload) {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type":"application/json" },
-      body: JSON.stringify(payload)
-    });
-    return await res.json();
-  }
-
-  async function postComment() {
-    const name = (nameEl.value || "").trim().slice(0, 20) || "Anonymous";
-    const text = (textEl.value || "").trim().slice(0, 100);
-    if (!text) return;
-
-    localStorage.setItem("comment_display_name_v1", name);
-
-    const payload = {
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
       action: "add",
       postId,
       name,
       text,
       deviceId: deviceId()
-    };
-
-    if (adminKey) payload.adminKey = adminKey;
-    if (adminKey && asAuthor.checked) payload.isAuthor = true;
-
-    const data = await apiPost(payload);
-
-    if (!data.ok) {
-      if (data.error === "24h_limit") setMsg("You can only comment once every 24 hours on this post.", true);
-      else setMsg(data.error || "Error", true);
-      return;
-    }
-
-    if (data.status === "pending") setMsg("Comment submitted. It will appear after approval.", false);
-    else setMsg("Comment posted.", false);
-
-    textEl.value = "";
-    countEl.textContent = "0 / 100";
-    await load();
-  }
-
-  async function react(commentId, kind) {
-    const data = await apiPost({ action:"react", postId, commentId, kind });
-    if (!data.ok) { setMsg(data.error || "Error", true); return; }
-    await load();
-  }
-
-  async function approve(commentId) {
-    const data = await apiPost({ action:"approve", postId, commentId, adminKey });
-    if (!data.ok) { setMsg(data.error || "Error", true); return; }
-    await load();
-  }
-
-  async function del(commentId) {
-    const data = await apiPost({ action:"delete", postId, commentId, adminKey });
-    if (!data.ok) { setMsg(data.error || "Error", true); return; }
-    await load();
-  }
-
-  textEl.addEventListener("input", () => {
-    if (textEl.value.length > 100) textEl.value = textEl.value.slice(0,100);
-    countEl.textContent = textEl.value.length + " / 100";
+    })
   });
 
-  postBtn.addEventListener("click", postComment);
-
-  listEl.addEventListener("click", async (e) => {
-    const btn = e.target.closest("button[data-act][data-id]");
-    if (!btn) return;
-    const act = btn.getAttribute("data-act");
-    const id = btn.getAttribute("data-id");
-
-    if (act === "like") return react(id, "like");
-    if (act === "dislike") return react(id, "dislike");
-    if (act === "approve") return approve(id);
-    if (act === "delete") return del(id);
-  });
-
-  emojiBtn.addEventListener("click", () => {
-    const open = emojiPanel.style.display === "inline-block";
-    emojiPanel.style.display = open ? "none" : "inline-block";
-  });
-
-  document.addEventListener("click", (e) => {
-    const within = emojiPanel.contains(e.target) || emojiBtn.contains(e.target);
-    if (!within) emojiPanel.style.display = "none";
-  });
-
-  function insertEmoji(em) {
-    const start = textEl.selectionStart || 0;
-    const end = textEl.selectionEnd || 0;
-    const v = textEl.value || "";
-    const next = (v.slice(0,start) + em + v.slice(end)).slice(0,100);
-    textEl.value = next;
-    const cursor = Math.min(start + em.length, 100);
-    textEl.focus();
-    textEl.setSelectionRange(cursor, cursor);
-    countEl.textContent = textEl.value.length + " / 100";
+  const data = await res.json();
+  if (!data.ok) {
+    msgEl.textContent = data.error || "Error posting comment";
+    return;
   }
 
-  function buildEmojis() {
-    grid.innerHTML = "";
-    EMOJIS.forEach(em => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.textContent = em;
-      b.style.border = "1px solid #eee";
-      b.style.background = "#fff";
-      b.style.borderRadius = "10px";
-      b.style.padding = "8px 0";
-      b.style.cursor = "pointer";
-      b.style.fontSize = "18px";
-      b.addEventListener("click", () => insertEmoji(em));
-      grid.appendChild(b);
-    });
-  }
-
-  const savedName = (localStorage.getItem("comment_display_name_v1") || "").trim();
-  nameEl.value = savedName || "Anonymous";
-
-  buildEmojis();
+  msgEl.textContent = "Comment submitted for approval";
+  textEl.value = "";
+  countEl.textContent = "0 / 100";
   load();
+};
+
+textEl.addEventListener("input", () => {
+  countEl.textContent = textEl.value.length + " / 100";
+});
+
+nameEl.value = localStorage.getItem("comment_name") || "Anonymous";
+nameEl.oninput = () => localStorage.setItem("comment_name", nameEl.value);
+
+load();
 </script>
 </body>
 </html>
